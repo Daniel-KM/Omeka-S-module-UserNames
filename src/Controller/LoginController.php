@@ -11,7 +11,9 @@ class LoginController extends \Omeka\Controller\LoginController
     public function loginAction()
     {
         if ($this->auth->hasIdentity()) {
-            return $this->redirect()->toRoute('admin');
+            return $this->userIsAllowed('Omeka\Controller\Admin\Index', 'browse')
+                ? $this->redirect()->toRoute('admin')
+                : $this->redirect()->toRoute('top');
         }
 
         $form = $this->getForm(LoginForm::class);
@@ -35,7 +37,9 @@ class LoginController extends \Omeka\Controller\LoginController
                     if ($redirectUrl = $session->offsetGet('redirect_url')) {
                         return $this->redirect()->toUrl($redirectUrl);
                     }
-                    return $this->redirect()->toRoute('admin');
+                    return $this->userIsAllowed('Omeka\Controller\Admin\Index', 'browse')
+                        ? $this->redirect()->toRoute('admin')
+                        : $this->redirect()->toRoute('top');
                 } else {
                     $this->messenger()->addError('User name, email, or password is invalid'); // @translate
                 }
