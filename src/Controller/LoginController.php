@@ -4,7 +4,7 @@ namespace UserNames\Controller;
 
 use UserNames\Form\LoginForm;
 use Laminas\View\Model\ViewModel;
-use Laminas\Session\Container;
+use Laminas\Session\Container as SessionContainer;
 
 class LoginController extends \Omeka\Controller\LoginController
 {
@@ -22,8 +22,12 @@ class LoginController extends \Omeka\Controller\LoginController
             $data = $this->getRequest()->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $sessionManager = Container::getDefaultManager();
-                $sessionManager->regenerateId();
+                // Create a new session, avoiding the warning in case of error.
+                // Avoid warning: session_regenerate_id(): Session object destruction
+                // failed when session save handler has issues.
+                // See /vendor/laminas/laminas-session/src/SessionManager.php on line 337.
+                $sessionManager = SessionContainer::getDefaultManager();
+                @$sessionManager->regenerateId();
                 $validatedData = $form->getData();
                 $adapter = $this->auth->getAdapter();
                 $adapter->setIdentity($validatedData['email']);

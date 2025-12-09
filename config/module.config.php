@@ -38,7 +38,7 @@ return [
     'translator' => [
         'translation_file_patterns' => [
             [
-                'type' => 'gettext',
+                'type' => \Laminas\I18n\Translator\Loader\Gettext::class,
                 'base_dir' => OMEKA_PATH . '/modules/UserNames/language',
                 'pattern' => '%s.mo',
                 'text_domain' => null
