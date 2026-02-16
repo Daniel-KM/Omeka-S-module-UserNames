@@ -102,11 +102,11 @@ class Module extends AbstractModule
     {
         $connectionService = $serviceLocator->get('Omeka\Connection');
         //V0.2
-        //$connectionService->exec('CREATE TABLE user_names (user_id INT NOT NULL, user_name VARCHAR(190) NOT NULL, UNIQUE INDEX UNIQ_10F1B21824A232CF (user_name), PRIMARY KEY(user_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;');
+        //$connectionService->executeStatement('CREATE TABLE user_names (user_id INT NOT NULL, user_name VARCHAR(190) NOT NULL, UNIQUE INDEX UNIQ_10F1B21824A232CF (user_name), PRIMARY KEY(user_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;');
         //$connectionService->exev('ALTER TABLE user_names ADD CONSTRAINT FK_10F1B218A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE;');
 
-        $connectionService->exec('CREATE TABLE user_names (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, user_name VARCHAR(190) NOT NULL, UNIQUE INDEX UNIQ_10F1B21824A232CF (user_name), UNIQUE INDEX UNIQ_10F1B218A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;');
-        $connectionService->exec('ALTER TABLE user_names ADD CONSTRAINT FK_10F1B218A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE;');
+        $connectionService->executeStatement('CREATE TABLE user_names (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, user_name VARCHAR(190) NOT NULL, UNIQUE INDEX UNIQ_10F1B21824A232CF (user_name), UNIQUE INDEX UNIQ_10F1B218A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;');
+        $connectionService->executeStatement('ALTER TABLE user_names ADD CONSTRAINT FK_10F1B218A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE;');
 
         $globalSettings = $serviceLocator->get('Omeka\Settings');
         $globalSettings->set('usernames_min_length', self::DEFAULT_USER_MIN_LENGTH);
@@ -127,11 +127,11 @@ class Module extends AbstractModule
         if (Comparator::lessThan($oldVersion, '0.2')) {
             //V0.2
             // Rename id column to user_id.
-            $connectionService->exec('ALTER TABLE user_names CHANGE id user_id INT;');
-            $connectionService->exec('ALTER TABLE user_names ADD UNIQUE INDEX UNIQ_10F1B218A76ED395 (user_id);');
-            $connectionService->exec('ALTER TABLE user_names DROP PRIMARY KEY;');
-            $connectionService->exec('ALTER TABLE user_names ADD COLUMN id INT PRIMARY KEY AUTO_INCREMENT NOT NULL;');
-            $connectionService->exec('ALTER TABLE user_names ADD CONSTRAINT FK_10F1B218A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE;');
+            $connectionService->executeStatement('ALTER TABLE user_names CHANGE id user_id INT;');
+            $connectionService->executeStatement('ALTER TABLE user_names ADD UNIQUE INDEX UNIQ_10F1B218A76ED395 (user_id);');
+            $connectionService->executeStatement('ALTER TABLE user_names DROP PRIMARY KEY;');
+            $connectionService->executeStatement('ALTER TABLE user_names ADD COLUMN id INT PRIMARY KEY AUTO_INCREMENT NOT NULL;');
+            $connectionService->executeStatement('ALTER TABLE user_names ADD CONSTRAINT FK_10F1B218A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE;');
         }
     }
 
@@ -139,7 +139,7 @@ class Module extends AbstractModule
     {
         $connection = $serviceLocator->get('Omeka\Connection');
 
-        $connection->exec('DROP TABLE `user_names`');
+        $connection->executeStatement('DROP TABLE `user_names`');
 
         /** @var Settings $globalSettings */
         $globalSettings = $serviceLocator->get('Omeka\Settings');
